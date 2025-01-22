@@ -7,7 +7,7 @@ Just provide the name of the account you want to create and click the **Create A
 
 # Keys
 
-When you create a key a **secret key** will also be provided that you cannot request later on, but it's needed in order to generate an **access token**. Therefore the app will enable you to save the content of that on your computer named `<key id>.pem`. Later on when you want to use it to generate an **access token** you can use the **Load From File** button which will also store the value for the duration of the session.
+When you create a key a **secret key** will also be provided that you **cannot request later on**, but it's needed in order to generate an **access token**. Therefore the app will enable you to save the content of that on your computer named `<key id>.pem`. When you want to use it to generate an **access token** you can use the **Load From File** button which will also store the value for the duration of the session.
 
 # Access Tokens
 

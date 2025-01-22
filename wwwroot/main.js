@@ -154,7 +154,7 @@ const deleteAccount = document.getElementById("delete-account");
 deleteAccount.onclick = async () => {
     if (
         confirm(
-            "Are you sure you want to delete the account? \nIt's a nonreversible operation."
+            "Are you sure you want to delete the account? \nThis operation is irreversible."
         ) == false
     )
         return;
@@ -315,7 +315,7 @@ const deleteKey = document.getElementById("delete-key");
 deleteKey.onclick = async () => {
     if (
         confirm(
-            "Are you sure you want to delete the key? \nIt's a nonreversible operation."
+            "Are you sure you want to delete the key? \nThis operation is irreversible."
         ) == false
     )
         return;

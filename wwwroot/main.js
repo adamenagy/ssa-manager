@@ -102,8 +102,7 @@ createAccount.onclick = async () => {
             }
         );
 
-		if (!res.ok)
-			throw new Error(await res.text());
+        if (!res.ok) throw new Error(await res.text());
 
         const data = await res.json();
         console.log(data);
@@ -116,11 +115,16 @@ createAccount.onclick = async () => {
 
 const deleteAccount = document.getElementById("delete-account");
 deleteAccount.onclick = async () => {
-	if (confirm("Are you sure you want to delete the account? \nIt's a nonreversible operation.") == false) 
-		return;
+    if (
+        confirm(
+            "Are you sure you want to delete the account? \nIt's a nonreversible operation."
+        ) == false
+    )
+        return;
 
-	try {
-		const accountData = accountsList.options[accountsList.selectedIndex].data;
+    try {
+        const accountData =
+            accountsList.options[accountsList.selectedIndex].data;
 
         const res = await fetch(
             `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}`,
@@ -128,18 +132,17 @@ deleteAccount.onclick = async () => {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
-                }
+                },
             }
         );
 
-        if (!res.ok)
-			throw new Error(await res.text());
+        if (!res.ok) throw new Error(await res.text());
 
         removeAccount();
     } catch (error) {
         alert(error);
-    }	
-}
+    }
+};
 
 // Keys
 
@@ -160,8 +163,8 @@ async function listKeys(accountId) {
 
     keysList.innerHTML = "";
     data.keys.forEach((key) => {
-		addKey(key);
-	});
+        addKey(key);
+    });
     keysList.onchange = () => {
         const keyData = keysList.options[keysList.selectedIndex].data;
         document.getElementById("key-details").innerHTML = JSON.stringify(
@@ -181,17 +184,16 @@ function addKey(key) {
     option.data = key;
     keysList.appendChild(option);
 
-	const accountData = accountsList.options[accountsList.selectedIndex].data;
-	if (key.privateKey)
-		accountData[key.kid] = { privateKey: key.privateKey };
+    const accountData = accountsList.options[accountsList.selectedIndex].data;
+    if (key.privateKey) accountData[key.kid] = { privateKey: key.privateKey };
 }
 
 function removeKey() {
-	const keyData = keysList.options[keysList.selectedIndex].data;
-	keysList.remove(keysList.selectedIndex);
+    const keyData = keysList.options[keysList.selectedIndex].data;
+    keysList.remove(keysList.selectedIndex);
 
-	const accountData = accountsList.options[accountsList.selectedIndex].data;
-	delete accountData[keyData.kid];
+    const accountData = accountsList.options[accountsList.selectedIndex].data;
+    delete accountData[keyData.kid];
 }
 
 const createKey = document.getElementById("create-key");
@@ -205,41 +207,45 @@ createKey.onclick = async () => {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
-                }
+                },
             }
         );
 
-		if (!res.ok)
-			throw new Error(await res.text());
+        if (!res.ok) throw new Error(await res.text());
 
         const data = await res.json();
         console.log(data);
 
         addKey(data);
 
-		savePem(data);
+        savePem(data);
     } catch (error) {
         alert(error);
     }
 };
 
 function savePem(data) {
-	const blob = new Blob([data.privateKey], { type: 'text/plain' });
-	const link = document.createElement('a');
-	link.href = URL.createObjectURL(blob);
-	link.download = `${data.kid}.pem`;
-	link.click();
-	URL.revokeObjectURL(link.href);	
+    const blob = new Blob([data.privateKey], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${data.kid}.pem`;
+    link.click();
+    URL.revokeObjectURL(link.href);
 }
 
 const deleteKey = document.getElementById("delete-key");
 deleteKey.onclick = async () => {
-	if (confirm("Are you sure you want to delete the key? \nIt's a nonreversible operation.") == false) 
-		return;
+    if (
+        confirm(
+            "Are you sure you want to delete the key? \nIt's a nonreversible operation."
+        ) == false
+    )
+        return;
 
-	try {
-		const accountData = accountsList.options[accountsList.selectedIndex].data;
-		const keyData = keysList.options[keysList.selectedIndex].data;
+    try {
+        const accountData =
+            accountsList.options[accountsList.selectedIndex].data;
+        const keyData = keysList.options[keysList.selectedIndex].data;
 
         const res = await fetch(
             `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}/keys/${keyData.kid}`,
@@ -247,18 +253,17 @@ deleteKey.onclick = async () => {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
-                }
+                },
             }
         );
 
-        if (!res.ok)
-			throw new Error(await res.text());
-		
+        if (!res.ok) throw new Error(await res.text());
+
         removeKey();
     } catch (error) {
         alert(error);
-    }	
-}
+    }
+};
 
 async function showPrivateKey(kid) {
     const accountData = accountsList.options[accountsList.selectedIndex].data;
@@ -270,10 +275,10 @@ async function showPrivateKey(kid) {
 
 const loadPem = document.getElementById("load-pem");
 loadPem.onclick = () => {
-	if (keysList.selectedIndex === -1) {
-		alert("Please select the key this private key is for.");
-		return;
-	}
+    if (keysList.selectedIndex === -1) {
+        alert("Please select the key this private key is for.");
+        return;
+    }
 
     const fileInput = document.getElementById("file-input");
     fileInput.click();
@@ -286,9 +291,10 @@ loadPem.onclick = () => {
             document.getElementById("private-key").value = reader.result;
             fileInput.value = "";
 
-			const accountData = accountsList.options[accountsList.selectedIndex].data;
-			const keyData = keysList.options[keysList.selectedIndex].data;
-			accountData[keyData.kid] = { privateKey: reader.result };
+            const accountData =
+                accountsList.options[accountsList.selectedIndex].data;
+            const keyData = keysList.options[keysList.selectedIndex].data;
+            accountData[keyData.kid] = { privateKey: reader.result };
         };
     };
 };
@@ -326,8 +332,7 @@ createToken.onclick = async () => {
             body: JSON.stringify(payload),
         });
 
-        if (!token.ok)
-            throw new Error(await token.text());
+        if (!token.ok) throw new Error(await token.text());
 
         const tokenData = await token.json();
 
@@ -338,5 +343,19 @@ createToken.onclick = async () => {
         );
     } catch (error) {
         alert(error);
+    }
+};
+
+const openJwtIo = document.getElementById("open-jwt-io");
+openJwtIo.onclick = async () => {
+    try {
+        const tokenData = JSON.parse(
+            document.getElementById("access-token").innerHTML
+        );
+
+        const jwtIoUrl = `https://jwt.io/#debugger-io?token=${tokenData.access_token}`;
+        window.open(jwtIoUrl);
+    } catch {
+        alert("Could not find 'access_token' in the 'Access Token' window.");
     }
 };

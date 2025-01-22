@@ -25,7 +25,7 @@
                 <input
                     name="username"
                     title="Client Id"
-                    id="clientId"
+                    id="client-id"
                     placeholder="Client Id"
                 />
                 <input
@@ -33,7 +33,7 @@
                     type="password"
                     title="Client Secret"
                     placeholder="Client Secret"
-                    id="clientSecret"
+                    id="client-secret"
                 />
                 <button type="button" id="login" title="Log in">Log in</button>
             </form>
@@ -63,7 +63,7 @@
                     id="delete-account"
                     title="Delete Account"
                 >
-                    Delete Account
+                    Delete Selected Account
                 </button>
                 <button
                     class="control"
@@ -104,7 +104,7 @@
                     id="delete-key"
                     title="Delete Key"
                 >
-                    Delete Key
+                    Delete Selected Key
                 </button>
                 <button
                     class="control"
@@ -119,16 +119,16 @@
                 <h1>Private Key</h1>
                 <textarea
                     class="fill"
-                    id="key-details"
-                    title="Key Details"
+                    id="private-key"
+                    title="Private Key"
                 ></textarea>
             </div>
             <div class="grid-item">
                 <h1>Access Token</h1>
                 <textarea
                     class="fill"
-                    id="key-details"
-                    title="Key Details"
+                    id="access-token"
+                    title="Access Token"
                 ></textarea>
             </div>
             <div class="grid-item grid-item-1">
@@ -140,6 +140,12 @@
                 >
                     Load From File
                 </button>
+				<input
+					class="invisible"
+					type="file"
+					id="file-input"
+					title="Pem File"
+				/>
             </div>
             <div class="grid-item grid-item-1">
                 <button
@@ -159,6 +165,6 @@
                 />
             </div>
         </div>
-        <script src="/main.js" type="module"></script>
+		<script src="/main.js" type="module"></script>
     </body>
 </html>

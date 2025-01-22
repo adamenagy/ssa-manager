@@ -102,6 +102,9 @@ createAccount.onclick = async () => {
             }
         );
 
+		if (!res.ok)
+			throw new Error(await res.text());
+
         const data = await res.json();
         console.log(data);
 
@@ -110,6 +113,33 @@ createAccount.onclick = async () => {
         alert(error);
     }
 };
+
+const deleteAccount = document.getElementById("delete-account");
+deleteAccount.onclick = async () => {
+	if (confirm("Are you sure you want to delete the account? \nIt's a nonreversible operation.") == false) 
+		return;
+
+	try {
+		const accountData = accountsList.options[accountsList.selectedIndex].data;
+
+        const res = await fetch(
+            `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+            }
+        );
+
+        if (!res.ok)
+			throw new Error(await res.text());
+
+        removeAccount();
+    } catch (error) {
+        alert(error);
+    }	
+}
 
 // Keys
 
@@ -150,6 +180,84 @@ function addKey(key) {
     option.text = key.kid;
     option.data = key;
     keysList.appendChild(option);
+
+	const accountData = accountsList.options[accountsList.selectedIndex].data;
+	if (key.privateKey)
+		accountData[key.kid] = { privateKey: key.privateKey };
+}
+
+function removeKey() {
+	const keyData = keysList.options[keysList.selectedIndex].data;
+	keysList.remove(keysList.selectedIndex);
+
+	const accountData = accountsList.options[accountsList.selectedIndex].data;
+	delete accountData[keyData.kid];
+}
+
+const createKey = document.getElementById("create-key");
+createKey.onclick = async () => {
+    const accountData = accountsList.options[accountsList.selectedIndex].data;
+
+    try {
+        const res = await fetch(
+            `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}/keys`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+            }
+        );
+
+		if (!res.ok)
+			throw new Error(await res.text());
+
+        const data = await res.json();
+        console.log(data);
+
+        addKey(data);
+
+		savePem(data);
+    } catch (error) {
+        alert(error);
+    }
+};
+
+function savePem(data) {
+	const blob = new Blob([data.privateKey], { type: 'text/plain' });
+	const link = document.createElement('a');
+	link.href = URL.createObjectURL(blob);
+	link.download = `${data.kid}.pem`;
+	link.click();
+	URL.revokeObjectURL(link.href);	
+}
+
+const deleteKey = document.getElementById("delete-key");
+deleteKey.onclick = async () => {
+	if (confirm("Are you sure you want to delete the key? \nIt's a nonreversible operation.") == false) 
+		return;
+
+	try {
+		const accountData = accountsList.options[accountsList.selectedIndex].data;
+		const keyData = keysList.options[keysList.selectedIndex].data;
+
+        const res = await fetch(
+            `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}/keys/${keyData.kid}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+            }
+        );
+
+        if (!res.ok)
+			throw new Error(await res.text());
+		
+        removeKey();
+    } catch (error) {
+        alert(error);
+    }	
 }
 
 async function showPrivateKey(kid) {
@@ -162,6 +270,11 @@ async function showPrivateKey(kid) {
 
 const loadPem = document.getElementById("load-pem");
 loadPem.onclick = () => {
+	if (keysList.selectedIndex === -1) {
+		alert("Please select the key this private key is for.");
+		return;
+	}
+
     const fileInput = document.getElementById("file-input");
     fileInput.click();
 
@@ -172,6 +285,10 @@ loadPem.onclick = () => {
         reader.onload = () => {
             document.getElementById("private-key").value = reader.result;
             fileInput.value = "";
+
+			const accountData = accountsList.options[accountsList.selectedIndex].data;
+			const keyData = keysList.options[keysList.selectedIndex].data;
+			accountData[keyData.kid] = { privateKey: reader.result };
         };
     };
 };
@@ -210,7 +327,7 @@ createToken.onclick = async () => {
         });
 
         if (!token.ok)
-            throw new Error(`HTTP error! status: ${await token.text()}`);
+            throw new Error(await token.text());
 
         const tokenData = await token.json();
 

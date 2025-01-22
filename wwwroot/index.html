@@ -1,68 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="https://cdn.autodesk.io/favicon.ico"
+        />
+        <link rel="stylesheet" href="/main.css" />
+        <title>SSA Tools</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" type="image/x-icon" href="https://cdn.autodesk.io/favicon.ico">
-    <link rel="stylesheet" href="/main.css">
-    <title>SSA Tools</title>
-</head>
-
-<body>
-    <div id="header">
-        <img class="logo" src="https://cdn.autodesk.io/logo/black/stacked.png" alt="Autodesk Platform Services">
-        <span class="title">SSA Tools</span>
-		<form id="login-form" title="Log in">
-			<input name="username" title="Client Id" id="clientId" placeholder="Client Id" />
-			<input name="password" type="password" title="Client Secret" placeholder="Client Secret" id="clientSecret" />
-			<button type="button" id="login" title="Log in">Log in</button>
-		</form>
-    </div>
-	<div class="grid-container">
-    	<div class="grid-item">
-			<h1>Accounts</h1>
-			<select class="fill" id="accounts-list" title="Accounts" size="10"></select>
-		</div>
-		<div class="grid-item">
-			<h1>Account Details</h1>
-			<textarea class="fill" id="account-details" title="Account Details"></textarea>
-		</div>
-		<div class="grid-item grid-item-2">
-			<button class="control" type="button" id="delete-account" title="Delete Account">Delete Account</button>
-			<button class="control" type="button" id="create-account" title="Create Account">Create Account With Name:</button>
-			<input class="control" id="account-name" title="Account Name" placeholder="Account Name" />
-		</div>
-		<div class="grid-item">
-			<h1>Keys</h1>
-			<select class="fill" id="keys-list" title="Keys" size="10"></select>
-		</div>
-		<div class="grid-item">
-			<h1>Key Details</h1>
-			<textarea class="fill" id="key-details" title="Key Details"></textarea>
-		</div>
-		<div class="grid-item grid-item-2">
-			<button class="control" type="button" id="delete-key" title="Delete Key">Delete Key</button>
-			<button class="control" type="button" id="create-key" title="Create Key">Create Key</button>
-		</div>
-		<div class="grid-item">
-			<h1>Private Key</h1>
-			<textarea class="fill" id="key-details" title="Key Details"></textarea>
-		</div>
-		<div class="grid-item">
-			<h1>Access Token</h1>
-			<textarea class="fill" id="key-details" title="Key Details"></textarea>
-		</div>
-		<div class="grid-item grid-item-1">
-			<button class="control" type="button" id="load-pem" title="Load Pem">Load From File</button>
-		</div>
-		<div class="grid-item grid-item-1">
-			<button class="control" type="button" id="create-token" title="Create Token">Create Token With Scopes:</button>
-			<input class="control" id="scopes" title="Scopes" placeholder="data:read data:create data:write" value="data:read data:create data:write" />
-		</div>
-	</div>
-    <script src="/main.js" type="module"></script>
-</body>
-
+    <body>
+        <div id="header">
+            <img
+                class="logo"
+                src="https://cdn.autodesk.io/logo/black/stacked.png"
+                alt="Autodesk Platform Services"
+            />
+            <span class="title">SSA Tools</span>
+            <form id="login-form" title="Log in">
+                <input
+                    name="username"
+                    title="Client Id"
+                    id="clientId"
+                    placeholder="Client Id"
+                />
+                <input
+                    name="password"
+                    type="password"
+                    title="Client Secret"
+                    placeholder="Client Secret"
+                    id="clientSecret"
+                />
+                <button type="button" id="login" title="Log in">Log in</button>
+            </form>
+        </div>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h1>Accounts</h1>
+                <select
+                    class="fill"
+                    id="accounts-list"
+                    title="Accounts"
+                    size="10"
+                ></select>
+            </div>
+            <div class="grid-item">
+                <h1>Account Details</h1>
+                <textarea
+                    class="fill"
+                    id="account-details"
+                    title="Account Details"
+                ></textarea>
+            </div>
+            <div class="grid-item grid-item-2">
+                <button
+                    class="control"
+                    type="button"
+                    id="delete-account"
+                    title="Delete Account"
+                >
+                    Delete Account
+                </button>
+                <button
+                    class="control"
+                    type="button"
+                    id="create-account"
+                    title="Create Account"
+                >
+                    Create Account With Name:
+                </button>
+                <input
+                    class="control"
+                    id="account-name"
+                    title="Account Name"
+                    placeholder="Account Name"
+                />
+            </div>
+            <div class="grid-item">
+                <h1>Keys</h1>
+                <select
+                    class="fill"
+                    id="keys-list"
+                    title="Keys"
+                    size="10"
+                ></select>
+            </div>
+            <div class="grid-item">
+                <h1>Key Details</h1>
+                <textarea
+                    class="fill"
+                    id="key-details"
+                    title="Key Details"
+                ></textarea>
+            </div>
+            <div class="grid-item grid-item-2">
+                <button
+                    class="control"
+                    type="button"
+                    id="delete-key"
+                    title="Delete Key"
+                >
+                    Delete Key
+                </button>
+                <button
+                    class="control"
+                    type="button"
+                    id="create-key"
+                    title="Create Key"
+                >
+                    Create Key
+                </button>
+            </div>
+            <div class="grid-item">
+                <h1>Private Key</h1>
+                <textarea
+                    class="fill"
+                    id="key-details"
+                    title="Key Details"
+                ></textarea>
+            </div>
+            <div class="grid-item">
+                <h1>Access Token</h1>
+                <textarea
+                    class="fill"
+                    id="key-details"
+                    title="Key Details"
+                ></textarea>
+            </div>
+            <div class="grid-item grid-item-1">
+                <button
+                    class="control"
+                    type="button"
+                    id="load-pem"
+                    title="Load Pem"
+                >
+                    Load From File
+                </button>
+            </div>
+            <div class="grid-item grid-item-1">
+                <button
+                    class="control"
+                    type="button"
+                    id="create-token"
+                    title="Create Token"
+                >
+                    Create Token With Scopes:
+                </button>
+                <input
+                    class="control"
+                    id="scopes"
+                    title="Scopes"
+                    placeholder="data:read data:create data:write"
+                    value="data:read data:create data:write"
+                />
+            </div>
+        </div>
+        <script src="/main.js" type="module"></script>
+    </body>
 </html>

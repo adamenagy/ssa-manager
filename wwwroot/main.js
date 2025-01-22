@@ -1,27 +1,5 @@
 let accessToken = null;
 
-/*
-const login = document.getElementById('login');
-login.onclick = async function () {
-	const resp = await fetch('/api/login', {
-		method: 'POST',
-		body: new FormData(document.getElementById('login-form'))
-	});
-	
-	accessToken = await resp.json();
-
-	listAccounts();
-}
-
-function listAccounts() {
-	return fetch('/api/accounts', {
-		headers: {	
-			Authorization: `Bearer ${accessToken}`
-		},
-	});
-}
-	*/
-
 function getAccessToken() {
     const clientId = document.getElementById("clientId").value;
     const clientSecret = document.getElementById("clientSecret").value;
@@ -65,46 +43,58 @@ async function listAccounts() {
 
     const data = await res.json();
 
-	const accountsList = document.getElementById('accounts-list');
-	accountsList.innerHTML = '';
-	data.serviceAccounts.forEach((account) => {
-		let option = document.createElement('option');
-		option.value = account.serviceAccountId;
-		option.text = account.email;
-		option.data = account;
-		accountsList.appendChild(option);
-	});
-	accountsList.onchange = function () {
-		const selectedAccount = accountsList.options[accountsList.selectedIndex].data;
-		document.getElementById('account-details').innerHTML = JSON.stringify(selectedAccount, null, 2);
+    const accountsList = document.getElementById("accounts-list");
+    accountsList.innerHTML = "";
+    data.serviceAccounts.forEach((account) => {
+        let option = document.createElement("option");
+        option.value = account.serviceAccountId;
+        option.text = account.email;
+        option.data = account;
+        accountsList.appendChild(option);
+    });
+    accountsList.onchange = function () {
+        const selectedAccount =
+            accountsList.options[accountsList.selectedIndex].data;
+        document.getElementById("account-details").innerHTML = JSON.stringify(
+            selectedAccount,
+            null,
+            2
+        );
 
-		listKeys(selectedAccount.serviceAccountId);
-	}
+        listKeys(selectedAccount.serviceAccountId);
+    };
 }
 
 async function listKeys(accountId) {
-	const res = await fetch(`https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountId}/keys`, {
-	  method: "GET",
-	  headers: {
-		Authorization: `Bearer ${accessToken}`,
-	  }
-	});
-  
-	const data = await res.json();
-  
-	const keysList = document.getElementById('keys-list');
-	keysList.innerHTML = '';
-	data.keys.forEach((key) => {
-		let option = document.createElement('option');
-		option.value = key.kid;
-		option.text = key.kid;
-		option.data = key;
-		keysList.appendChild(option);
-	});
-	keysList.onchange = function () {
-		const selectedKey = keysList.options[keysList.selectedIndex].data;
-		document.getElementById('key-details').innerHTML = JSON.stringify(selectedKey, null, 2);
+    const res = await fetch(
+        `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountId}/keys`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
 
-		listKeys(selectedAccount.serviceAccountId);
-	}
-  }
+    const data = await res.json();
+
+    const keysList = document.getElementById("keys-list");
+    keysList.innerHTML = "";
+    data.keys.forEach((key) => {
+        let option = document.createElement("option");
+        option.value = key.kid;
+        option.text = key.kid;
+        option.data = key;
+        keysList.appendChild(option);
+    });
+    keysList.onchange = function () {
+        const selectedKey = keysList.options[keysList.selectedIndex].data;
+        document.getElementById("key-details").innerHTML = JSON.stringify(
+            selectedKey,
+            null,
+            2
+        );
+
+        listKeys(selectedAccount.serviceAccountId);
+    };
+}

@@ -359,3 +359,16 @@ openJwtIo.onclick = async () => {
         alert("Could not find 'access_token' in the 'Access Token' window.");
     }
 };
+
+const copyToken = document.getElementById("copy-token");
+copyToken.onclick = async () => {
+    try {
+        const tokenData = JSON.parse(
+            document.getElementById("access-token").value
+        );
+
+        navigator.clipboard.writeText(tokenData.access_token);
+    } catch {
+        alert("Could not find 'access_token' in the 'Access Token' window.");
+    }
+};

@@ -72,12 +72,18 @@ async function listAccounts() {
     };
 }
 
-function addAccount(account) {
+function addAccount(accountData) {
     let option = document.createElement("option");
-    option.value = account.serviceAccountId;
-    option.text = account.email;
-    option.data = account;
+    option.value = accountData.serviceAccountId;
+    option.text = accountData.email;
+    option.data = accountData;
     accountsList.appendChild(option);
+}
+
+function updateAccount(status) {
+    accountsList.options[accountsList.selectedIndex].data.status = status;
+
+    accountsList.onchange();
 }
 
 function removeAccount() {
@@ -108,6 +114,37 @@ createAccount.onclick = async () => {
         console.log(data);
 
         addAccount(data);
+    } catch (error) {
+        alert(error);
+    }
+};
+
+const enableDisableAccount = document.getElementById("enable-disable-account");
+enableDisableAccount.onclick = async () => {
+    const accountData = accountsList.options[accountsList.selectedIndex].data;
+    const newStatus = accountData.status === "ENABLED" ? "DISABLED" : "ENABLED";
+
+    if (newStatus === "DISABLED") {
+        if (!confirm("Are you sure you want to disable the account?")) return;
+    }
+
+    try {
+        const res = await fetch(
+            `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({
+                    status: newStatus,
+                }),
+            }
+        );
+
+        if (!res.ok) throw new Error(await res.text());
+
+        updateAccount(newStatus);
     } catch (error) {
         alert(error);
     }
@@ -177,15 +214,22 @@ async function listKeys(accountId) {
     };
 }
 
-function addKey(key) {
+function addKey(keyData) {
     let option = document.createElement("option");
-    option.value = key.kid;
-    option.text = key.kid;
-    option.data = key;
+    option.value = keyData.kid;
+    option.text = keyData.kid;
+    option.data = keyData;
     keysList.appendChild(option);
 
     const accountData = accountsList.options[accountsList.selectedIndex].data;
-    if (key.privateKey) accountData[key.kid] = { privateKey: key.privateKey };
+    if (keyData.privateKey)
+        accountData[keyData.kid] = { privateKey: keyData.privateKey };
+}
+
+function updateKey(status) {
+    keysList.options[keysList.selectedIndex].data.status = status;
+
+    keysList.onchange();
 }
 
 function removeKey() {
@@ -232,6 +276,40 @@ function savePem(data) {
     link.click();
     URL.revokeObjectURL(link.href);
 }
+
+const enableDisableKey = document.getElementById("enable-disable-key");
+enableDisableKey.onclick = async () => {
+    const keyData = keysList.options[keysList.selectedIndex].data;
+    const newStatus = keyData.status === "ENABLED" ? "DISABLED" : "ENABLED";
+
+    if (newStatus === "DISABLED") {
+        if (!confirm("Are you sure you want to disable the key?")) return;
+    }
+
+    try {
+        const accountData =
+            accountsList.options[accountsList.selectedIndex].data;
+
+        const res = await fetch(
+            `https://developer.api.autodesk.com/authentication/v2/service-accounts/${accountData.serviceAccountId}/keys/${keyData.kid}`,
+            {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({
+                    status: newStatus,
+                }),
+            }
+        );
+
+        if (!res.ok) throw new Error(await res.text());
+
+        updateKey(newStatus);
+    } catch (error) {
+        alert(error);
+    }
+};
 
 const deleteKey = document.getElementById("delete-key");
 deleteKey.onclick = async () => {

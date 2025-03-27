@@ -104,6 +104,8 @@ createAccount.onclick = async () => {
                 },
                 body: JSON.stringify({
                     name: accountName,
+                    firstName: "First",
+                    lastName: "Last",
                 }),
             }
         );
